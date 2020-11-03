@@ -1,13 +1,14 @@
-package com.br.barbershop.services;
+package com.br.barbershop.services.user;
 
-import com.br.barbershop.dtos.UserDto;
+import com.br.barbershop.dtos.user.UserDto;
 import com.br.barbershop.interfaces.UserPersistenciaAdapter;
 import com.br.barbershop.models.User;
+import com.br.barbershop.services.user.interfaces.CasoDeUso;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -22,14 +23,16 @@ public class UserService implements CasoDeUso{
     public UserDto salvar(UserDto userDto){
         User user = converterDtoEmUser(userDto);
         userPersistenciaAdapter.salvar(user);
-        return userDto;
+        UserDto userResponse = converterUserEmDto(user);
+        return userResponse;
 
     }
 
     @Override
     public UserDto editar(UserDto userDto){
         User user = converterDtoEmUser(userDto);
-        user = userPersistenciaAdapter.salvar(user);
+        get(user.getId());
+        user = userPersistenciaAdapter.salvarEdicao(user);
         user.setId(user.getId());
         return userDto;
     }
@@ -42,9 +45,9 @@ public class UserService implements CasoDeUso{
     }
 
     @Override
-    public UserDto findByNome(String nome){
-       Optional<User> user = userPersistenciaAdapter.findByNome(nome);
-        UserDto userDto = converterUserEmDto(user.get());
+    public UserDto findByUsername(String username){
+       User user = userPersistenciaAdapter.findByUsername(username);
+       UserDto userDto = converterUserEmDto(user);
         return userDto;
     }
 
@@ -60,14 +63,17 @@ public class UserService implements CasoDeUso{
                     return converterUserEmDto(user);
                 })
                 .collect(Collectors.toList());
-}  
+} 
 
     public User converterDtoEmUser(UserDto userDto){
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return User.builder()
                     .email(userDto.getEmail())
                     .nome(userDto.getNome())
-                    .senha(userDto.getSenha())
+                    .senha(passwordEncoder.encode(userDto.getSenha()))
                     .ativo(userDto.getAtivo())
+                    .role(userDto.getRole())
+                    .username(userDto.getUsername())
                     .id(userDto.getId())
                     .build();
     }
@@ -78,6 +84,8 @@ public class UserService implements CasoDeUso{
                     .nome(user.getNome())
                     .senha(user.getSenha())
                     .id(user.getId())
+                    .role(user.getRole())
+                    .username(user.getUsername())
                     .ativo(user.getAtivo())
                     .build();
     }

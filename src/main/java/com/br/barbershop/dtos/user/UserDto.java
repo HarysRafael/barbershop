@@ -1,4 +1,6 @@
-package com.br.barbershop.dtos;
+package com.br.barbershop.dtos.user;
+
+import com.br.barbershop.models.enums.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +16,8 @@ public class UserDto {
     private String nome;
     private String email;
     private String senha;
-    private Boolean ativo;
+    private Role role;
+    private String username;
+    private Boolean ativo=true;
     
 }

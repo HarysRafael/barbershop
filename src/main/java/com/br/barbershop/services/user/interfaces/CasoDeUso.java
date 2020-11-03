@@ -1,8 +1,8 @@
-package com.br.barbershop.services;
+package com.br.barbershop.services.user.interfaces;
 
 import java.util.List;
 
-import com.br.barbershop.dtos.UserDto;
+import com.br.barbershop.dtos.user.UserDto;
 
 public interface CasoDeUso {
 
@@ -16,6 +16,6 @@ public interface CasoDeUso {
 
     void desativar(Long id);
 
-    UserDto findByNome(String nome);
+    UserDto findByUsername(String nome);
     
 }

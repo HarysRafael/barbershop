@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.br.barbershop.models.enums.Role;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +24,8 @@ public class User {
     private String nome;
     private String email;
     private String senha;
-    private Boolean ativo;
+    private Role role;
+    private String username;
+    private Boolean ativo=true;
     
 }
