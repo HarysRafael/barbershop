@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
+import static java.util.Collections.emptyList;
+
 @Component
 @RequiredArgsConstructor
 public class CustomUserDetail implements UserDetailsService {
@@ -18,12 +20,11 @@ public class CustomUserDetail implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        try{
         User user = userPersistenciaAdapter.findByUsername(username);
-        
-            return new UserPrincipal(user);
-        }catch(Exception e){
-            throw new UsernameNotFoundException(String.format("User not found for %s", username));
+
+        if (user == null) {
+            throw new UsernameNotFoundException(username);
         }
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getSenha(), emptyList());
     }
 }
