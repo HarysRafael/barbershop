@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class UserPersistenciaAdapter{
-
+  
     private final UserRepository userRepository;
 
     public User salvar(User user){
